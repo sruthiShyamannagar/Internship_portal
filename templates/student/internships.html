@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Explore Internships | InternHub</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .internship-page {
+            min-height: 100vh;
+            background: #f7f8fc;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .internship-nav {
+            height: 72px;
+
+            padding: 0 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: white;
+
+            border-bottom: 1px solid #e8eaf0;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .internship-logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .internship-logo span {
+            color: #635bff;
+        }
+
+        .internship-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .internship-nav-links a {
+            color: #687184;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .internship-nav-links a:hover {
+            color: #635bff;
+        }
+
+        .internship-nav-links .active {
+            color: #635bff;
+        }
+
+        .internship-logout {
+            padding: 9px 15px;
+
+            border-radius: 8px;
+
+            background: #fff0f0;
+
+            color: #d94343 !important;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .internship-main {
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 50px 25px 80px;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .internship-heading {
+            margin-bottom: 30px;
+        }
+
+        .internship-heading small {
+            color: #635bff;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .internship-heading h1 {
+            font-size: 38px;
+
+            letter-spacing: -1.8px;
+
+            margin: 7px 0;
+        }
+
+        .internship-heading p {
+            color: #7b8495;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           SEARCH
+        ========================= */
+
+        .internship-search-box {
+            background: white;
+
+            border: 1px solid #e5e7ee;
+
+            border-radius: 16px;
+
+            padding: 10px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            box-shadow:
+                0 8px 25px rgba(20,30,60,.04);
+
+            margin-bottom: 38px;
+        }
+
+        .search-icon {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #eeecff;
+
+            color: #635bff;
+
+            font-size: 17px;
+        }
+
+        .internship-search-box input {
+            flex: 1;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            padding: 12px;
+
+            font-size: 14px;
+
+            color: #333a4a;
+        }
+
+        .internship-search-box input::placeholder {
+            color: #9aa1af;
+        }
+
+        .search-button {
+            border: none;
+
+            padding: 13px 22px;
+
+            border-radius: 10px;
+
+            background: #635bff;
+
+            color: white;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .search-button:hover {
+            background: #5148e8;
+        }
+
+
+        /* =========================
+           RESULTS HEADER
+        ========================= */
+
+        .results-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .results-header h2 {
+            font-size: 19px;
+
+            letter-spacing: -.5px;
+        }
+
+        .results-count {
+            color: #8991a1;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           GRID
+        ========================= */
+
+        .internships-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(290px, 1fr));
+
+            gap: 20px;
+        }
+
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .internship-item {
+            background: white;
+
+            border: 1px solid #e6e8ef;
+
+            border-radius: 18px;
+
+            padding: 24px;
+
+            transition: .25s;
+
+            box-shadow:
+                0 5px 20px rgba(20,30,60,.035);
+        }
+
+        .internship-item:hover {
+            transform: translateY(-6px);
+
+            border-color: #dddafe;
+
+            box-shadow:
+                0 20px 45px rgba(30,35,80,.10);
+        }
+
+
+        /* CARD TOP */
+
+        .internship-card-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            margin-bottom: 18px;
+        }
+
+        .company-avatar {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eeecff,
+                    #e3e1ff
+                );
+
+            color: #635bff;
+
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .deadline-badge {
+            padding: 6px 9px;
+
+            border-radius: 7px;
+
+            background: #f5f6f9;
+
+            color: #737c8d;
+
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+
+        /* TITLE */
+
+        .internship-item h3 {
+            font-size: 17px;
+
+            line-height: 1.4;
+
+            margin-bottom: 5px;
+        }
+
+        .internship-company {
+            color: #635bff;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        /* DETAILS */
+
+        .internship-details {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin: 18px 0;
+        }
+
+        .internship-details span {
+            padding: 7px 9px;
+
+            background: #f5f6f9;
+
+            color: #6f7889;
+
+            border-radius: 7px;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+
+        /* DESCRIPTION */
+
+        .internship-description {
+            color: #7b8495;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+            margin-bottom: 17px;
+
+            display: -webkit-box;
+
+            -webkit-line-clamp: 3;
+
+            -webkit-box-orient: vertical;
+
+            overflow: hidden;
+        }
+
+
+        /* SKILLS */
+
+        .skills-title {
+            color: #555e70;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .5px;
+        }
+
+        .skills-list {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 6px;
+
+            margin-bottom: 20px;
+        }
+
+        .skill {
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            background: #eeeeff;
+
+            color: #635bff;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+
+        /* BUTTON */
+
+        .details-button {
+            display: block;
+
+            width: 100%;
+
+            padding: 11px;
+
+            text-align: center;
+
+            border-radius: 9px;
+
+            background: #635bff;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            transition: .2s;
+        }
+
+        .details-button:hover {
+            background: #5148e8;
+        }
+
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-results {
+            grid-column: 1 / -1;
+
+            background: white;
+
+            border: 1px solid #e6e8ef;
+
+            border-radius: 20px;
+
+            padding: 75px 20px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            background: #eeecff;
+
+            font-size: 24px;
+        }
+
+        .empty-results h3 {
+            font-size: 18px;
+
+            margin-bottom: 7px;
+        }
+
+        .empty-results p {
+            color: #858d9d;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:700px) {
+
+            .internship-nav {
+                padding: 0 18px;
+            }
+
+            .internship-nav-links {
+                gap: 10px;
+            }
+
+            .internship-nav-links a:not(.internship-logout) {
+                display: none;
+            }
+
+            .internship-main {
+                padding: 30px 18px 60px;
+            }
+
+            .internship-heading h1 {
+                font-size: 31px;
+            }
+
+            .internship-search-box {
+                padding: 8px;
+            }
+
+            .search-button {
+                padding: 12px 15px;
+            }
+
+            .search-icon {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="internship-page">
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="internship-nav">
+
+    <a href="{{ url_for('student_dashboard') }}"
+       class="internship-logo">
+
+        Intern<span>Hub</span>
+
+    </a>
+
+
+    <div class="internship-nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('student_internships') }}"
+           class="active">
+            Internships
+        </a>
+
+        <a href="{{ url_for('student_applications') }}">
+            My Applications
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="internship-logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="internship-main">
+
+
+    <!-- HEADER -->
+
+    <section class="internship-heading">
+
+        <small>
+            OPPORTUNITIES
+        </small>
+
+        <h1>
+            Explore internships
+        </h1>
+
+        <p>
+            Find opportunities that match your skills,
+            interests and career goals.
+        </p>
+
+    </section>
+
+
+
+    <!-- SEARCH -->
+
+    <form method="GET"
+          action="{{ url_for('student_internships') }}"
+          class="internship-search-box">
+
+
+        <div class="search-icon">
+            🔍
+        </div>
+
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="Search by internship, company or skill...">
+
+
+        <button
+            type="submit"
+            class="search-button">
+
+            Search
+
+        </button>
+
+
+    </form>
+
+
+
+    <!-- RESULTS -->
+
+    <div class="results-header">
+
+        <div>
+
+            <h2>
+                Available internships
+            </h2>
+
+        </div>
+
+        {% if internships %}
+
+        <span class="results-count">
+            {{ internships|length }} opportunity{% if internships|length != 1 %}ies{% endif %}
+        </span>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- CARDS -->
+
+    <section class="internships-grid">
+
+
+        {% if internships %}
+
+
+            {% for internship in internships %}
+
+            <article class="internship-item">
+
+
+                <div class="internship-card-top">
+
+                    <div class="company-avatar">
+
+                        {{ internship.company[0] | upper }}
+
+                    </div>
+
+
+                    <div class="deadline-badge">
+
+                        Deadline:
+                        {{ internship.deadline }}
+
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    {{ internship.title }}
+                </h3>
+
+
+                <div class="internship-company">
+
+                    {{ internship.company }}
+
+                </div>
+
+
+
+                <div class="internship-details">
+
+                    <span>
+                        📍 {{ internship.location }}
+                    </span>
+
+                    <span>
+                        ⏱ {{ internship.duration }}
+                    </span>
+
+                    <span>
+                        💰 {{ internship.stipend }}
+                    </span>
+
+                </div>
+
+
+
+                <p class="internship-description">
+
+                    {{ internship.description }}
+
+                </p>
+
+
+
+                {% if internship.skills %}
+
+                <div class="skills-title">
+                    Skills
+                </div>
+
+
+                <div class="skills-list">
+
+                    {% for skill in internship.skills.split(',')[:5] %}
+
+                    <span class="skill">
+                        {{ skill.strip() }}
+                    </span>
+
+                    {% endfor %}
+
+                </div>
+
+                {% endif %}
+
+
+
+                <a href="{{ url_for(
+                    'internship_details',
+                    internship_id=internship.internship_id
+                ) }}"
+                   class="details-button">
+
+                    View Internship →
+
+                </a>
+
+
+            </article>
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="empty-results">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    No internships found
+                </h3>
+
+                <p>
+                    Try searching for a different role,
+                    company or skill.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

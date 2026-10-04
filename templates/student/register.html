@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration | InternHub</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .auth-page-new {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 10%, #e7e5ff, transparent 30%),
+                radial-gradient(circle at 90% 90%, #e0f7ff, transparent 30%),
+                #f7f8fc;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 35px 20px;
+        }
+
+        .auth-wrapper {
+            width: 100%;
+            max-width: 1050px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            background: white;
+            border-radius: 25px;
+
+            overflow: hidden;
+
+            border: 1px solid #e6e8ef;
+
+            box-shadow:
+                0 30px 80px rgba(30,35,80,.12);
+        }
+
+        .auth-info {
+            padding: 55px;
+
+            background:
+                radial-gradient(circle at 90% 10%, #817aff, transparent 35%),
+                linear-gradient(145deg, #5148e8, #635bff);
+
+            color: white;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-info::after {
+            content: "✦";
+
+            position: absolute;
+            right: -20px;
+            bottom: -45px;
+
+            font-size: 220px;
+            color: rgba(255,255,255,.07);
+        }
+
+        .auth-logo {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 70px;
+        }
+
+        .auth-info h1 {
+            font-size: 40px;
+            line-height: 1.1;
+            letter-spacing: -2px;
+
+            max-width: 390px;
+            margin-bottom: 20px;
+        }
+
+        .auth-info p {
+            max-width: 390px;
+
+            color: #dedcff;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .auth-points {
+            margin-top: 35px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .auth-point {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .auth-check {
+            width: 27px;
+            height: 27px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,.15);
+        }
+
+        .auth-form-section {
+            padding: 50px;
+        }
+
+        .auth-form-section h2 {
+            font-size: 27px;
+            letter-spacing: -1px;
+            margin-bottom: 7px;
+        }
+
+        .auth-subtitle {
+            color: #81899a;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        .auth-form-group {
+            margin-bottom: 16px;
+        }
+
+        .auth-form-group label {
+            display: block;
+
+            color: #343b4b;
+            font-size: 12px;
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+        .auth-form-group input,
+        .auth-form-group select {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #dfe2e9;
+            border-radius: 10px;
+
+            background: #fafbfc;
+
+            outline: none;
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+        .auth-form-group input:focus,
+        .auth-form-group select:focus {
+            border-color: #635bff;
+            background: white;
+
+            box-shadow:
+                0 0 0 3px rgba(99,91,255,.10);
+        }
+
+        .auth-submit {
+            width: 100%;
+
+            border: none;
+            border-radius: 10px;
+
+            padding: 14px;
+
+            background: #635bff;
+            color: white;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            margin-top: 8px;
+
+            box-shadow:
+                0 10px 25px rgba(99,91,255,.25);
+
+            transition: .25s;
+        }
+
+        .auth-submit:hover {
+            background: #5148e8;
+            transform: translateY(-2px);
+        }
+
+        .auth-bottom {
+            text-align: center;
+
+            margin-top: 22px;
+
+            color: #7d8596;
+            font-size: 12px;
+        }
+
+        .auth-bottom a {
+            color: #635bff;
+            font-weight: 700;
+        }
+
+        .auth-alert {
+            padding: 11px 13px;
+            border-radius: 9px;
+
+            margin-bottom: 18px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .auth-alert.error {
+            background: #fff0f0;
+            color: #d83d3d;
+        }
+
+        .auth-alert.success {
+            background: #e9f9f0;
+            color: #16834d;
+        }
+
+        .back-home {
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            color: #747c8d;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .back-home:hover {
+            color: #635bff;
+        }
+
+        @media(max-width:800px) {
+
+            .auth-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-info {
+                display: none;
+            }
+
+            .auth-form-section {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="auth-page-new">
+
+    <div class="auth-wrapper">
+
+
+        <!-- LEFT -->
+
+        <section class="auth-info">
+
+            <div class="auth-logo">
+                InternHub
+            </div>
+
+            <h1>
+                Start building
+                your future today.
+            </h1>
+
+            <p>
+                Create your student account and discover
+                internship opportunities designed to help
+                you gain real-world experience.
+            </p>
+
+
+            <div class="auth-points">
+
+                <div class="auth-point">
+                    <div class="auth-check">✓</div>
+                    Discover internships
+                </div>
+
+                <div class="auth-point">
+                    <div class="auth-check">✓</div>
+                    Apply with ease
+                </div>
+
+                <div class="auth-point">
+                    <div class="auth-check">✓</div>
+                    Track your applications
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT -->
+
+        <section class="auth-form-section">
+
+            <a href="{{ url_for('index') }}"
+               class="back-home">
+                ← Back to home
+            </a>
+
+            <h2>
+                Create your account
+            </h2>
+
+            <p class="auth-subtitle">
+                Join InternHub and start exploring opportunities.
+            </p>
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% for category, message in messages %}
+
+                    <div class="auth-alert {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endwith %}
+
+
+            <form method="POST">
+
+
+                <div class="auth-form-group">
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required>
+
+                </div>
+
+
+                <div class="auth-form-group">
+
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="you@example.com"
+                        required>
+
+                </div>
+
+
+                <div class="auth-form-group">
+
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required>
+
+                </div>
+
+
+                <div class="auth-form-group">
+
+                    <label>Phone Number</label>
+
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter phone number"
+                        required>
+
+                </div>
+
+
+                <div class="auth-form-group">
+
+                    <label>Course</label>
+
+                    <input
+                        type="text"
+                        name="course"
+                        placeholder="e.g. B.Tech Computer Science"
+                        required>
+
+                </div>
+
+
+                <div class="auth-form-group">
+
+                    <label>College</label>
+
+                    <input
+                        type="text"
+                        name="college"
+                        placeholder="Enter your college name"
+                        required>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="auth-submit">
+
+                    Create Student Account →
+
+                </button>
+
+            </form>
+
+
+            <div class="auth-bottom">
+
+                Already have an account?
+
+                <a href="{{ url_for('student_login') }}">
+                    Login here
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+</body>
+</html>

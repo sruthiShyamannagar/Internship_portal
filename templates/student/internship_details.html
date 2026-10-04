@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ internship.title }} | InternHub</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f7f8fc;
+            color: #172033;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .details-nav {
+
+            height: 72px;
+
+            padding: 0 7%;
+
+            background: white;
+
+            border-bottom: 1px solid #e8eaf0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+        }
+
+        .logo {
+
+            font-size: 25px;
+            font-weight: 800;
+
+            color: #172033;
+
+        }
+
+        .logo span {
+            color: #635bff;
+        }
+
+        .nav-links {
+
+            display: flex;
+            align-items: center;
+
+            gap: 25px;
+
+        }
+
+        .nav-links a {
+
+            color: #6d7585;
+
+            font-size: 13px;
+            font-weight: 600;
+
+        }
+
+        .nav-links a:hover {
+
+            color: #635bff;
+
+        }
+
+        .logout {
+
+            padding: 9px 14px;
+
+            border-radius: 8px;
+
+            background: #fff0f0;
+
+            color: #d94242 !important;
+
+        }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .details-page {
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding: 45px 25px 80px;
+
+        }
+
+
+        /* BACK BUTTON */
+
+        .back-link {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #697386;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-bottom: 25px;
+
+        }
+
+        .back-link:hover {
+
+            color: #635bff;
+
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .details-hero {
+
+            background: white;
+
+            border: 1px solid #e5e7ee;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 30px;
+
+            box-shadow:
+                0 8px 30px rgba(20,30,60,.04);
+
+        }
+
+        .hero-left {
+
+            display: flex;
+
+            gap: 20px;
+
+        }
+
+        .company-icon {
+
+            width: 65px;
+            height: 65px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            background: #eeecff;
+
+            color: #635bff;
+
+            font-size: 24px;
+
+            font-weight: 800;
+
+        }
+
+        .hero-info h1 {
+
+            margin: 0 0 6px;
+
+            font-size: 30px;
+
+            letter-spacing: -1px;
+
+        }
+
+        .company-name {
+
+            color: #635bff;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+        }
+
+        .location {
+
+            color: #81899a;
+
+            font-size: 12px;
+
+            margin-top: 8px;
+
+        }
+
+        .deadline {
+
+            padding: 9px 13px;
+
+            border-radius: 9px;
+
+            background: #fff6df;
+
+            color: #a87300;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            white-space: nowrap;
+
+        }
+
+
+        /* =========================
+           CONTENT GRID
+        ========================= */
+
+        .content-grid {
+
+            display: grid;
+
+            grid-template-columns: 1fr 320px;
+
+            gap: 22px;
+
+            margin-top: 22px;
+
+        }
+
+
+        /* =========================
+           CONTENT CARD
+        ========================= */
+
+        .content-card {
+
+            background: white;
+
+            border: 1px solid #e5e7ee;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 5px 20px rgba(20,30,60,.035);
+
+        }
+
+        .content-card h2 {
+
+            font-size: 18px;
+
+            margin: 0 0 15px;
+
+        }
+
+        .description {
+
+            color: #697386;
+
+            font-size: 13px;
+
+            line-height: 1.9;
+
+            white-space: pre-line;
+
+        }
+
+
+        /* =========================
+           SKILLS
+        ========================= */
+
+        .skills {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-top: 15px;
+
+        }
+
+        .skill {
+
+            padding: 7px 11px;
+
+            border-radius: 7px;
+
+            background: #eeeeff;
+
+            color: #635bff;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =========================
+           SIDE CARD
+        ========================= */
+
+        .side-card {
+
+            background: white;
+
+            border: 1px solid #e5e7ee;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            height: fit-content;
+
+            position: sticky;
+
+            top: 95px;
+
+            box-shadow:
+                0 5px 20px rgba(20,30,60,.035);
+
+        }
+
+        .side-card h3 {
+
+            font-size: 16px;
+
+            margin: 0 0 20px;
+
+        }
+
+
+        .info-row {
+
+            padding: 14px 0;
+
+            border-bottom: 1px solid #edf0f4;
+
+        }
+
+        .info-row:last-of-type {
+
+            border-bottom: none;
+
+        }
+
+        .info-label {
+
+            display: block;
+
+            color: #8a92a1;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: .5px;
+
+            margin-bottom: 4px;
+
+        }
+
+        .info-value {
+
+            color: #353d4d;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =========================
+           APPLY BUTTON
+        ========================= */
+
+        .apply-button {
+
+            display: block;
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            background: #635bff;
+
+            color: white;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            transition: .25s;
+
+        }
+
+        .apply-button:hover {
+
+            background: #5148e8;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(99,91,255,.22);
+
+        }
+
+
+        /* =========================
+           FLASH MESSAGE
+        ========================= */
+
+        .flash {
+
+            padding: 13px 17px;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+
+            background: #e8f8ef;
+
+            color: #16804a;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width:800px) {
+
+            .details-hero {
+
+                flex-direction: column;
+
+                padding: 25px;
+
+            }
+
+            .content-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .side-card {
+
+                position: static;
+
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            .details-nav {
+
+                padding: 0 18px;
+
+            }
+
+            .nav-links {
+
+                gap: 10px;
+
+            }
+
+            .nav-links a:not(.logout) {
+
+                display: none;
+
+            }
+
+            .details-page {
+
+                padding: 30px 18px 60px;
+
+            }
+
+            .hero-left {
+
+                flex-direction: column;
+
+            }
+
+            .hero-info h1 {
+
+                font-size: 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="details-nav">
+
+    <a href="{{ url_for('student_dashboard') }}"
+       class="logo">
+
+        Intern<span>Hub</span>
+
+    </a>
+
+
+    <div class="nav-links">
+
+        <a href="{{ url_for('student_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('student_internships') }}">
+            Internships
+        </a>
+
+        <a href="{{ url_for('student_applications') }}">
+            My Applications
+        </a>
+
+        <a href="{{ url_for('logout') }}"
+           class="logout">
+
+            Logout
+
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     PAGE
+========================= -->
+
+<main class="details-page">
+
+
+    <a href="{{ url_for('student_internships') }}"
+       class="back-link">
+
+        ← Back to Internships
+
+    </a>
+
+
+    <!-- FLASH -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% for category, message in messages %}
+
+            <div class="flash">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+
+
+    {% if internship %}
+
+
+    <!-- =========================
+         HERO
+    ========================= -->
+
+    <section class="details-hero">
+
+
+        <div class="hero-left">
+
+
+            <div class="company-icon">
+
+                {{ internship.company[0] | upper }}
+
+            </div>
+
+
+            <div class="hero-info">
+
+                <h1>
+                    {{ internship.title }}
+                </h1>
+
+                <div class="company-name">
+
+                    {{ internship.company }}
+
+                </div>
+
+                <div class="location">
+
+                    📍 {{ internship.location }}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="deadline">
+
+            Deadline:
+            {{ internship.deadline }}
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         CONTENT
+    ========================= -->
+
+    <div class="content-grid">
+
+
+        <!-- LEFT -->
+
+        <section>
+
+
+            <div class="content-card">
+
+                <h2>
+                    About this internship
+                </h2>
+
+                <div class="description">
+
+                    {{ internship.description }}
+
+                </div>
+
+            </div>
+
+
+
+            <div class="content-card"
+                 style="margin-top:22px;">
+
+                <h2>
+                    Skills required
+                </h2>
+
+
+                <div class="skills">
+
+                    {% if internship.skills %}
+
+                        {% for skill in internship.skills.split(',') %}
+
+                            <span class="skill">
+
+                                {{ skill.strip() }}
+
+                            </span>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <span class="skill">
+                            General Skills
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- RIGHT -->
+
+        <aside class="side-card">
+
+
+            <h3>
+                Internship details
+            </h3>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Company
+                </span>
+
+                <span class="info-value">
+                    {{ internship.company }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Location
+                </span>
+
+                <span class="info-value">
+                    {{ internship.location }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Duration
+                </span>
+
+                <span class="info-value">
+                    {{ internship.duration }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Stipend
+                </span>
+
+                <span class="info-value">
+                    {{ internship.stipend }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Application Deadline
+                </span>
+
+                <span class="info-value">
+                    {{ internship.deadline }}
+                </span>
+
+            </div>
+
+
+            <a href="{{ url_for(
+                'apply_internship',
+                internship_id=internship.internship_id
+            ) }}"
+               class="apply-button">
+
+                Apply for Internship →
+
+            </a>
+
+
+        </aside>
+
+
+    </div>
+
+
+    {% else %}
+
+
+    <!-- NOT FOUND -->
+
+    <div class="content-card"
+         style="text-align:center;padding:70px;">
+
+        <h2>
+            Internship not found
+        </h2>
+
+        <p style="color:#81899a;font-size:13px;">
+            This internship may have been removed.
+        </p>
+
+        <a href="{{ url_for('student_internships') }}"
+           class="apply-button"
+           style="max-width:220px;margin:20px auto 0;">
+
+            Browse Internships
+
+        </a>
+
+    </div>
+
+
+    {% endif %}
+
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Internship | InternHub</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            background: #f6f7fb;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+
+        .admin-sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-logo {
+            padding: 0 15px 38px;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .admin-logo span {
+            color: #817aff;
+        }
+
+        .admin-menu-title {
+            color: #667085;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 15px;
+            margin-bottom: 10px;
+        }
+
+        .admin-sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #9ca3af;
+            padding: 13px 15px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background: #242b3b;
+            color: white;
+        }
+
+        .admin-sidebar a.active {
+            box-shadow: inset 3px 0 #817aff;
+        }
+
+        .admin-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .admin-sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout-link {
+            color: #f87171 !important;
+        }
+
+        /* MAIN */
+
+        .admin-main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 35px 45px 70px;
+        }
+
+        .page-header {
+            max-width: 1000px;
+            margin: 0 auto 28px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #7a8394;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .back-link:hover {
+            color: #635bff;
+        }
+
+        .page-header h1 {
+            font-size: 30px;
+            letter-spacing: -1px;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            color: #7b8495;
+            font-size: 13px;
+        }
+
+        /* FORM */
+
+        .form-card {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            border: 1px solid #e5e7ed;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(20,30,60,.04);
+        }
+
+        .form-section {
+            padding: 30px 32px;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .form-section-header {
+            margin-bottom: 23px;
+        }
+
+        .form-section-header h2 {
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .form-section-header p {
+            color: #8992a3;
+            font-size: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 19px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #343b4b;
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: #635bff;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            border: 1px solid #dfe3eb;
+            background: #fafbfc;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 13px;
+            color: #252b3b;
+            outline: none;
+            transition: .2s;
+        }
+
+        .form-group input {
+            height: 46px;
+        }
+
+        .form-group textarea {
+            min-height: 145px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            background: white;
+            border-color: #635bff;
+            box-shadow: 0 0 0 3px rgba(99,91,255,.09);
+        }
+
+        .form-actions {
+            background: #fafbfc;
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cancel-btn {
+            color: #697386;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 11px 17px;
+            border-radius: 9px;
+        }
+
+        .cancel-btn:hover {
+            background: #eef0f4;
+        }
+
+        .submit-btn {
+            border: none;
+            background: #635bff;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #5148e8;
+        }
+
+        @media(max-width: 900px) {
+
+            .admin-sidebar {
+                width: 210px;
+            }
+
+            .admin-main {
+                margin-left: 210px;
+                width: calc(100% - 210px);
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media(max-width: 650px) {
+
+            .admin-layout {
+                display: block;
+            }
+
+            .admin-sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 15px;
+            }
+
+            .admin-logo {
+                padding: 0 15px;
+                white-space: nowrap;
+            }
+
+            .admin-menu-title,
+            .admin-sidebar-bottom {
+                display: none;
+            }
+
+            .admin-sidebar a {
+                white-space: nowrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+                width: 100%;
+                padding: 25px 18px 50px;
+            }
+
+            .form-section {
+                padding: 24px 20px;
+            }
+
+            .form-actions {
+                padding: 18px 20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-logo">
+            Intern<span>Hub</span>
+        </div>
+
+        <div class="admin-menu-title">
+            Management
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            <span class="admin-icon">▦</span>
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('add_internship') }}">
+            <span class="admin-icon">＋</span>
+            Add Internship
+        </a>
+
+        <a href="{{ url_for('admin_applications') }}">
+            <span class="admin-icon">☷</span>
+            Applications
+        </a>
+
+        <div class="admin-sidebar-bottom">
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-link">
+
+                <span class="admin-icon">↪</span>
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+        <div class="page-header">
+
+            <a href="{{ url_for('admin_dashboard') }}"
+               class="back-link">
+
+                ← Back to Dashboard
+
+            </a>
+
+            <h1>
+                Edit Internship
+            </h1>
+
+            <p>
+                Update the internship information below.
+            </p>
+
+        </div>
+
+
+        <!-- EDIT FORM -->
+
+        <form method="POST"
+              action="{{ url_for('edit_internship', internship_id=internship.internship_id) }}"
+              class="form-card">
+
+
+            <!-- BASIC INFORMATION -->
+
+            <section class="form-section">
+
+                <div class="form-section-header">
+
+                    <h2>
+                        Internship Information
+                    </h2>
+
+                    <p>
+                        Update the basic details of this opportunity.
+                    </p>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Internship Title
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            value="{{ internship.title }}"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Company
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="company"
+                            value="{{ internship.company }}"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Location
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="location"
+                            value="{{ internship.location }}"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Duration
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="duration"
+                            value="{{ internship.duration }}"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Stipend
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="stipend"
+                            value="{{ internship.stipend }}"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Application Deadline
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="date"
+                            name="deadline"
+                            value="{{ internship.deadline }}"
+                            required>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SKILLS -->
+
+            <section class="form-section">
+
+                <div class="form-section-header">
+
+                    <h2>
+                        Skills & Requirements
+                    </h2>
+
+                    <p>
+                        Update the skills required for this internship.
+                    </p>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Required Skills
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="skills"
+                        value="{{ internship.skills }}"
+                        required>
+
+                </div>
+
+            </section>
+
+
+            <!-- DESCRIPTION -->
+
+            <section class="form-section">
+
+                <div class="form-section-header">
+
+                    <h2>
+                        Internship Description
+                    </h2>
+
+                    <p>
+                        Update the description shown to students.
+                    </p>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Description
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        name="description"
+                        required>{{ internship.description }}</textarea>
+
+                </div>
+
+            </section>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <a href="{{ url_for('admin_dashboard') }}"
+                   class="cancel-btn">
+
+                    Cancel
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="submit-btn">
+
+                    Save Changes →
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>
